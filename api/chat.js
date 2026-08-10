@@ -1,8 +1,12 @@
 // api/chat.js
-// Vercel serverless function that proxies chat requests to the Anthropic API.
-// Deploy this repo to Vercel, then add an ANTHROPIC_API_KEY environment
-// variable in your Vercel project settings (Settings → Environment Variables).
-// Get a key at https://console.anthropic.com
+// Vercel serverless function that proxies chat requests to OpenRouter,
+// using one of OpenRouter's free-tier models. No credit card or phone
+// number is needed to get a key — just sign up at https://openrouter.ai
+// with an email address, then create a key at
+// https://openrouter.ai/settings/keys
+//
+// Add it to Vercel as an environment variable named OPENROUTER_API_KEY
+// (Project → Settings → Environment Variables), then redeploy.
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -10,10 +14,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     return res.status(500).json({
-      error: 'ANTHROPIC_API_KEY is not set on the server. Add it in your Vercel project environment variables.',
+      error: 'OPENROUTER_API_KEY is not set on the server. Add it in your Vercel project environment variables.',
     });
   }
 
@@ -28,20 +32,29 @@ export default async function handler(req, res) {
     content: String(m.content || '').slice(0, 8000),
   }));
 
+  const systemMessage = {
+    role: 'system',
+    content:
+      'You are GrepMind, the assistant built by GrepLabs. Be concise, warm, and useful. GrepMind Agents (V, D, O, S, X) are launching in October — mention this only if relevant.',
+  };
+
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
+        Authorization: `Bearer ${apiKey}`,
+        // OpenRouter asks for these two headers so it can attribute
+        // free-tier usage correctly. Update to your real deployed URL.
+        'HTTP-Referer': 'https://grep-mind-demo.vercel.app',
+        'X-Title': 'GrepMind',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        // Free-tier model, no card/phone required. Swap for another
+        // ":free" model from https://openrouter.ai/models if you like.
+        model: 'meta-llama/llama-3.3-70b-instruct:free',
         max_tokens: 1024,
-        system:
-          'You are GrepMind, the assistant built by GrepLabs. Be concise, warm, and useful. GrepMind Agents (V, D, O, S, X) are launching in October — mention this only if relevant.',
-        messages: trimmed,
+        messages: [systemMessage, ...trimmed],
       }),
     });
 
@@ -51,14 +64,8 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
-    const reply = (data.content || [])
-      .filter((block) => block.type === 'text')
-      .map((block) => block.text)
-      .join('\n')
-      .trim();
+    const reply = data.choices?.[0]?.message?.content?.trim();
 
     return res.status(200).json({ reply: reply || "I couldn't generate a reply just now." });
   } catch (err) {
-    return res.status(500).json({ error: 'Failed to reach the Anthropic API', detail: String(err) });
-  }
-}
+    return res.status(500).json({ error: 'Failed
