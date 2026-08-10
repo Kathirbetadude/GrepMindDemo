@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrepMind</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪐</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="dark">
+
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <button class="icon-btn" id="menuToggle" aria-label="Toggle sidebar">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 4.5h14M2 9h14M2 13.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="new-chat" id="newChat">
+          <span class="new-chat-icon">🪐</span>
+          <span>New chat</span>
+        </button>
+      </div>
+
+      <button class="search-chats">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span>Search chats</span>
+      </button>
+
+      <div class="recent-chats">
+        <button class="recent-chats-toggle" id="recentToggle">
+          <span>Recent chats</span>
+          <svg class="chev" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <ul class="chat-list" id="chatList"></ul>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+          <svg id="themeIconMoon" width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M14.5 9.7A6 6 0 1 1 7.3 2.5a5 5 0 0 0 7.2 7.2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="sign-out">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M6 1.5H2.5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1H6M10 10.5l3-3-3-3M13 7.5H5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Sign out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn mobile-only" id="menuToggleMobile" aria-label="Toggle sidebar">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 4.5h14M2 9h14M2 13.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <span class="brand-mark">🪐</span>
+        <h1>GrepMind</h1>
+        <span class="build-tag">v1</span>
+      </header>
+
+      <section class="conversation" id="conversation">
+        <div class="greeting" id="greeting">
+          <div class="greeting-orb">
+            <span>🪐</span>
+          </div>
+          <h2 id="greetingText">Hello, Night Owl.</h2>
+          <p class="greeting-sub">Ask anything &mdash; GrepMind is listening.</p>
+        </div>
+        <div class="messages" id="messages"></div>
+      </section>
+
+      <div class="composer-wrap">
+        <form class="composer" id="composerForm">
+          <button type="button" class="composer-plus" aria-label="Add attachment">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2.5v11M2.5 8h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <input type="text" id="promptInput" class="composer-input" placeholder="Ask anything…" autocomplete="off" />
+          <div class="composer-tools">
+            <span class="tool-chip" title="GrepMind Agents">🪐</span>
+            <span class="tool-chip tool-chip--accent" title="GrepLabs">G</span>
+          </div>
+          <button type="submit" class="composer-send" id="sendBtn" aria-label="Send message">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 12.5V2.5M3 7l4.5-4.5L12 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
+        <p class="composer-hint">GrepMind can make mistakes. Verify important information.</p>
+      </div>
+
+      <footer class="launch-banner">
+        <span class="launch-dot"></span>
+        GrepMind Agents are launching in October &middot; built by <a href="https://www.greplabs.co" target="_blank" rel="noopener">GrepLabs</a>
+      </footer>
+    </main>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "grepmind",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "GrepMind — AI chat interface by GrepLabs"
+}
