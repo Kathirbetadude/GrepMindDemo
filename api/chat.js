@@ -41,3 +41,21 @@ export default async function handler(req, res) {
         model: 'meta-llama/llama-3.3-70b-instruct:free',
         max_tokens: 1024,
         messages: [systemMessage].concat(trimmed)
+      })
+    });
+
+    if (!response.ok) {
+      var errText = await response.text();
+      return res.status(response.status).json({ error: errText });
+    }
+
+    var data = await response.json();
+    var reply = data.choices && data.choices[0] && data.choices[0].message
+      ? data.choices[0].message.content.trim()
+      : '';
+
+    return res.status(200).json({ reply: reply || "I couldn't generate a reply just now." });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to reach OpenRouter', detail: String(err) });
+  }
+}
